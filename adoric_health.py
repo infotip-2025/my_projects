@@ -20,7 +20,7 @@ def read_files_to_list(directory_full_path):
     line_by_line = list()
 
     # file cont just informational if needed
-    file_count = 0 
+    file_count = 0
 
     # open next available file
     for file_name in os.listdir(full_path):
@@ -55,17 +55,16 @@ def read_files_to_list(directory_full_path):
             print('File:', file_name, 'cannot be opened. Error:', e)
     return line_by_line, file_count
 
-def print_data (data_container):
-    if isinstance(data_container,list):
+
+def print_data(data_container):
+    if isinstance(data_container, list):
         for line in data_container:
             print(line)
     else:
         print('Data container is of not valid type. Use e.g. a list.')
 
+
 data_line_by_line, numer_of_files = read_files_to_list(full_path)
 
 print_data(data_line_by_line)
-
-
 print('Number of processed files:', numer_of_files)
-
