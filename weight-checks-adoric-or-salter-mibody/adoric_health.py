@@ -248,8 +248,8 @@ options = st.multiselect(
     max_selections=2
 )
 options = sorted(options)
-st.write("You selected:", options)
-st.write("You selected:", sorted(options))
+# ! st.write("You selected:", options)
+# ! st.write("You selected:", sorted(options))
 
 if len(options) > 0:
     st.dataframe(weight_weekly_average_df.loc[options[-1]:options[0]])
@@ -288,6 +288,8 @@ with col3:
     st.header("Part III")
     st.dataframe(fig_01_df[['Weight', 'BMI']].iloc[2*rows_slice:],
                  height=container_h)
+
+st.write(os.getcwd())
 
 pokemon_df = pok.read()
 
