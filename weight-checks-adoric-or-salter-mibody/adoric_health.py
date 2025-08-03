@@ -8,11 +8,12 @@ import plotly.express as px
 import random
 
 # setup the directory path
-drive = 'u:'
-path_a = 'OneDrive'
-path_b = 'DRIVE_GOOGLE'
-path_c = 'Adoric health'
-full_path = os.path.join(drive, '/', path_a, path_b, path_c)
+# drive = 'u:'
+# path_a = 'OneDrive'
+# path_b = 'DRIVE_GOOGLE'
+# path_c = 'Adoric health'
+# full_path = os.path.join(drive, '/', path_a, path_b, path_c)
+full_path = './Data'
 
 # pick current dir - not needed for this purpose
 # and change working dir to the required one

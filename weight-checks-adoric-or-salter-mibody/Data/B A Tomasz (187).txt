@@ -1,0 +1,10 @@
+Tomasz NIEAKTYWN
+Time:08:09, Wed,7/ 5/2023
+Weight:107.4kg  --    Overweight
+Body water:46.6%  --    Inadequate
+Body fat:34.7%  --    Overweight
+Bone Mass:3.5kg  --    Optimal
+BMI:32.4  --    Overweight
+Visceral fat:16.0  --    Dangerous
+BMR:1889.0 kcal  --    Underweight
+Muscle Mass:66.7kg  --    Optimal

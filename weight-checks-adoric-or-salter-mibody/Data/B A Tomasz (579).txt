@@ -1,0 +1,10 @@
+Tomasz
+Time:19:16, Wed,5/ 1/2024
+Weight:105.5kg  ↓   Overweight
+Body water:47.1%  ↑   Inadequate
+Body fat:34.1%  ↓   Overweight
+Bone Mass:3.5kg  --    Optimal
+BMI:31.9  --    Overweight
+Visceral fat:16.0  --    Dangerous
+BMR:1861.0 kcal  ↓   Underweight
+Muscle Mass:66.1kg  --    Optimal
