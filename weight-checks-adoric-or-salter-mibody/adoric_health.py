@@ -326,9 +326,8 @@ options = st.multiselect(
     max_selections=1
 )
 
-my_mask = pokemon_df['name'] == options[0]
-
 # st.write('options:', options)
+# my_mask = pokemon_df['name'] == options[0]
 # st.write(my_mask)
 # st.write(pokemon_df[my_mask])  # ['pokedex_number']
 # ! st.write("You selected:", options)
@@ -336,7 +335,7 @@ my_mask = pokemon_df['name'] == options[0]
 
 if len(options) > 0:
     st.image(
-        f'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/{options[0]}.png'
+        f'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/{options[0]['pokedex_number']}.png'
     )
 else:
     st.warning('No range selected so the default one is displayed:')
