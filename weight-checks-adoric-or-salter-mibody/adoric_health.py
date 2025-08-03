@@ -24,6 +24,8 @@ import pokemon as pok
 # ! st.write(os.environ.items())
 # ! ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑
 
+st.write('Jeb sie chuju!')
+
 st.write(os.environ['HOSTNAME'])
 
 if os.environ.get('HOSTNAME') == 'streamlit':
