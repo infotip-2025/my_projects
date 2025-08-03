@@ -10,3 +10,6 @@ pages = {
         # st.Page("trial.py", title="Try it out"),
     ],
 }
+
+pg = st.navigation(pages)
+pg.run()
