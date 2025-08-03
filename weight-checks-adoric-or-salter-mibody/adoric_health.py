@@ -242,7 +242,7 @@ st.markdown(f"Your selected options: {selection}.")
 my_list = weight_weekly_average_df.index.to_list()
 
 options = st.multiselect(
-    "What are your favorite colors?",
+    "Start and End dates:",
     my_list,
     default=[my_list[0], my_list[-1]],
     max_selections=2
@@ -316,3 +316,25 @@ except ValueError:
 st.image(
     f'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/{pokedex_number}.png'
 )
+
+my_list = pokemon_df['Name'].to_list()
+
+options = st.multiselect(
+    "What pokemon do you want?",
+    my_list,
+    default=my_list[0],
+    max_selections=1
+)
+options = pokemon_df[pokemon_df['Name'] == options]['pokedex_number']
+# ! st.write("You selected:", options)
+# ! st.write("You selected:", sorted(options))
+
+if len(options) > 0:
+    st.image(
+        f'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/{options}.png'
+    )
+else:
+    st.warning('No range selected so the default one is displayed:')
+    st.image(
+        f'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/1.png'
+    )
