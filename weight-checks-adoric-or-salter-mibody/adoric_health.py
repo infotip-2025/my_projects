@@ -335,8 +335,8 @@ options = st.multiselect(
 if len(options) > 0:
     my_mask = pokemon_df['name'] == options[0]
     selectedpokemon_df = pokemon_df[my_mask]
-    pokedex_number = selectedpokemon_df['pokedex_number'].to_dict()
-    st.write(pokedex_number)
+    pokedex_number = selectedpokemon_df['pokedex_number'].to_list()
+    st.write(pokedex_number[0])
     st.image(
         f'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/{pokedex_number}.png'
     )
