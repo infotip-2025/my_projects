@@ -316,6 +316,8 @@ st.dataframe(pokemon_df)
 #     f'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/{pokedex_number}.png'
 # )
 
+st.warning('KURWA!!!')
+
 my_list = pokemon_df['name'].to_list()
 
 col1, col2, col3, col4 = st.columns(4)
@@ -328,7 +330,7 @@ options = st.multiselect(
     max_selections=1
     )
 
-with cols[2]:   
+with cols[0]:   
     if len(options) > 0:
         st.header(options[0])
         my_mask = pokemon_df['name'] == options[0]
