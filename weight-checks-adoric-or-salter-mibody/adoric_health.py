@@ -16,7 +16,7 @@ import random
 # full_path = './Data'
 # full_path = 
 # '/mount/src/my_projects/weight-checks-adoric-or-salter-mibody/Data'
-full_path = './Data'
+full_path = 'Data'
 
 ## '''
 ## pick current dir - not needed for this purpose
