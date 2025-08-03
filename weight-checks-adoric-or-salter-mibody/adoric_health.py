@@ -300,22 +300,21 @@ st.dataframe(pokemon_df)
 
 # link_temp = 'https://img.pokemondb.net/artwork/pikachu.jpg'
 
+# try:
+#     pokedex_number = \
+#         int(
+#             st.text_input(
+#                 "Provide pokemon pokedex_number:",
+#                 1,
+#                 )
+#         )
+# except ValueError:
+#     st.warning('A non-integer provided! Used 1 - default value.')
+#     pokedex_number = 1
 
-try:
-    pokedex_number = \
-        int(
-            st.text_input(
-                "Provide pokemon pokedex_number:",
-                1,
-                )
-        )
-except ValueError:
-    st.warning('A non-integer provided! Used 1 - default value.')
-    pokedex_number = 1
-
-st.image(
-    f'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/{pokedex_number}.png'
-)
+# st.image(
+#     f'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/{pokedex_number}.png'
+# )
 
 my_list = pokemon_df['name'].to_list()
 
