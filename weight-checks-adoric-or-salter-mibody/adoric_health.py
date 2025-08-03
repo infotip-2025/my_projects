@@ -289,9 +289,12 @@ with col3:
     st.dataframe(fig_01_df[['Weight', 'BMI']].iloc[2*rows_slice:],
                  height=container_h)
 
-st.write(os.getcwd())
+st.write(os.getcwdb())
 
-pokemon_df = pok.read()
+file_to_read = \
+    os.getcwd() + \
+    '/weight-checks-adoric-or-salter-mibody/data_pokemon/pokemon (4).csv'
+pokemon_df = pok.read(file_to_read)
 
 st.dataframe(pokemon_df)
 
