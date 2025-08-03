@@ -4,6 +4,6 @@ import os
 # import plotly.express as px
 
 
-def read():
-    df = pd.read_csv('data_pokemon/pokemon (4).csv')
+def read(file_to_read):
+    df = pd.read_csv(file_to_read)
     return df
