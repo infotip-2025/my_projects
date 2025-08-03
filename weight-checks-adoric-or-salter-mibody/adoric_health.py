@@ -7,6 +7,8 @@ import plotly.express as px
 # import statsmodels.api as sm
 import random
 
+import pokemon as pok
+
 # setup the directory path
 # drive = 'u:'
 # path_a = 'OneDrive'
@@ -128,9 +130,18 @@ fig_01 = px.scatter(
 fig_01.update_xaxes(showgrid=True, gridwidth=1, gridcolor='#dfdfdf')
 fig_01.update_yaxes(showgrid=True, gridwidth=1, gridcolor='#dfdfdf')
 
-st.write()
-st.write()
-st.write('Weight readings and a weekly trendline')
+frequency_for_agg = st.radio(
+    "Select mothly, weekly (week end Sun), weekly (week end Fri)",
+    ["ME", "W-Sun", "W-Fri"],
+    captions=[
+        "Monthly",
+        "Weekly Sun",
+        "Weekly Fri",
+    ],
+    horizontal=True,
+)
+
+st.write(f'Weight readings and a {frequency_for_agg} trendline')
 st.plotly_chart(fig_01)
 
 # df.resample('ME').mean()
@@ -145,17 +156,6 @@ weight_weekly_average_df['BMI'] = \
     weight_weekly_average_df['BMI'].astype(float)
 weight_weekly_average_df['Weight'] = \
     weight_weekly_average_df['Weight'].astype(float)
-
-frequency_for_agg = st.radio(
-    "Select mothly, weekly (week end Sun), weekly (week end Fri)",
-    ["ME", "W-Sun", "W-Fri"],
-    captions=[
-        "Monthly",
-        "Weekly Sun",
-        "Weekly Fri",
-    ],
-    horizontal=True,
-)
 
 weight_weekly_average_df = \
     weight_weekly_average_df.resample(frequency_for_agg).mean().round(1)
@@ -288,3 +288,9 @@ with col3:
     st.header("Part III")
     st.dataframe(fig_01_df[['Weight', 'BMI']].iloc[2*rows_slice:],
                  height=container_h)
+
+pokemon_df = pok.read()
+
+st.dataframe(pokemon_df)
+
+# link_temp = 'https://img.pokemondb.net/artwork/pikachu.jpg'
