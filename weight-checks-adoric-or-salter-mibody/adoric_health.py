@@ -101,7 +101,7 @@ try:
                 )
         )
 except ValueError:
-    st.warning('Not an integer provided!')
+    st.warning('Not an integer provided! Default value used: 83.')
     number_of_recent_readings = 83
 
 fig_01_df = pivoted_df.iloc[:number_of_recent_readings].copy()
