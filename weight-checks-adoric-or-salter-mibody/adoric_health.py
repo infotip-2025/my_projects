@@ -91,7 +91,12 @@ pivoted_df.sort_index(ascending=False, inplace=True)
 # fig_01_start_date =
 
 # number_of_recent_readings = 1093
-number_of_recent_readings = 83
+
+number_of_recent_readings = \
+    st.text_input(
+        "Provide number of recent records to dislplay?",
+        83,
+        )
 fig_01_df = pivoted_df.iloc[:number_of_recent_readings].copy()
 
 fig_01_df['Weight'] = fig_01_df['Weight'].astype(float)
