@@ -134,8 +134,18 @@ weight_weekly_average_df['BMI'] = \
 weight_weekly_average_df['Weight'] = \
     weight_weekly_average_df['Weight'].astype(float)
 
+frequency_for_agg = st.radio(
+    "Select mothly, weekly (week end Sun), weekly (week end Fri)",
+    ["ME", "W-Sun", "W-Fri"],
+    captions=[
+        "Monthly",
+        "Weekly Sun",
+        "Weekly Fri",
+    ],
+)
+
 weight_weekly_average_df = \
-    weight_weekly_average_df.resample('W-Sun').mean().round(1)
+    weight_weekly_average_df.resample(frequency_for_agg).mean().round(1)
 weight_weekly_average_df.sort_index(ascending=False, inplace=True)
 weight_weekly_average_df['weight_change'] = \
     weight_weekly_average_df['Weight'] \
