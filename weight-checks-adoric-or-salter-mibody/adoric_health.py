@@ -142,6 +142,7 @@ frequency_for_agg = st.radio(
         "Weekly Sun",
         "Weekly Fri",
     ],
+    horizontal=True,
 )
 
 weight_weekly_average_df = \
