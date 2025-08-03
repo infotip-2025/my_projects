@@ -318,10 +318,10 @@ st.dataframe(pokemon_df)
 
 my_list = pokemon_df['name'].to_list()
 
-cols = tuple(st.columns(4))
-st.write(type(cols))
+col1, col2, col3, col4 = st.columns(4)
+cols = (col1, col2, col3, col4)
+
 for i in range(4):
-    st.write(type(cols[i]))
     with cols[i]:
         options = st.multiselect(
             "What pokemon do you want?",
