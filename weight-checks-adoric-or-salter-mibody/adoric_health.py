@@ -17,8 +17,8 @@ full_path = './Data'
 
 # pick current dir - not needed for this purpose
 # and change working dir to the required one
-current_dir = os.getcwd()
-os.chdir(full_path)
+# current_dir = os.getcwd()
+# os.chdir(full_path)
 
 
 # print(full_path)
@@ -28,7 +28,7 @@ data_line_by_line, \
     data_line_by_line_user_names_only \
     = rmf.read_files_to_list(full_path)
 
-os.chdir(current_dir)
+# os.chdir(current_dir)
 
 # setup streamlite page
 st.set_page_config(layout="wide", initial_sidebar_state="expanded")
