@@ -21,7 +21,7 @@ full_path = '/mount/src/my_projects/weight-checks-adoric-or-salter-mibody/Data'
 # current_dir = os.getcwd()
 # os.chdir(full_path)
 
-st.write(os.cwd)
+st.write(os.getcwd)
 
 # print(full_path)
 
