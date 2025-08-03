@@ -18,14 +18,14 @@ import random
 # '/mount/src/my_projects/weight-checks-adoric-or-salter-mibody/Data'
 full_path = '.streamlit/weight-checks-adoric-or-salter-mibody/Data'
 
+'''
 # pick current dir - not needed for this purpose
 # and change working dir to the required one
 # current_dir = os.getcwd()
 # os.chdir(full_path)
-
-# st.write(os.getcwd)
-
+# xxxxxx_st.write(os.getcwd)
 # print(full_path)
+# '''
 
 data_line_by_line, \
     numer_of_files, \
