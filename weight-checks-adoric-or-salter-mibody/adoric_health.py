@@ -26,7 +26,7 @@ st.write(os.environ['HOSTNAME'])
 
 if os.environ.get('HOSTNAME') == 'streamlit':
     full_path = \
-        os.getcwd + '/weight-checks-adoric-or-salter-mibody/Data'
+        os.getcwd() + '/weight-checks-adoric-or-salter-mibody/Data'
 else:
     drive = 'u:'
     path_a = 'OneDrive'
