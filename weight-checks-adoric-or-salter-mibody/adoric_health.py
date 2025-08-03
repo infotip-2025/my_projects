@@ -299,3 +299,20 @@ pokemon_df = pok.read(file_to_read)
 st.dataframe(pokemon_df)
 
 # link_temp = 'https://img.pokemondb.net/artwork/pikachu.jpg'
+
+
+try:
+    link = \
+        int(
+            st.text_input(
+                "Provide pokemon pokedex_number:",
+                1,
+                )
+        )
+except ValueError:
+    st.warning('A non-integer provided! Used 1 - default value.')
+    link = 1
+
+st.image(
+    f'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/{pokedex_number}.png'
+)
