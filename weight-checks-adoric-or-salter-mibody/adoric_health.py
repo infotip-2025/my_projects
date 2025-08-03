@@ -321,6 +321,29 @@ my_list = pokemon_df['name'].to_list()
 col1, col2, col3, col4 = st.columns(4)
 cols = (col1, col2, col3, col4)
 
+with cols[0]:
+    options = st.multiselect(
+        "What pokemon do you want?",
+        my_list,
+        default=my_list[0],
+        max_selections=1
+    )
+    
+    if len(options) > 0:
+        st.header(options[0])
+        my_mask = pokemon_df['name'] == options[0]
+        selectedpokemon_df = pokemon_df[my_mask]
+        pokedex_number = selectedpokemon_df['pokedex_number'].to_list()
+        pokedex_number = pokedex_number[0]
+        st.image(
+            f'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/{pokedex_number}.png'
+        )
+    else:
+        st.warning('No range selected so the default one is displayed:')
+        st.image(
+            f'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/1.png'
+        )
+
 with cols[1]:
     options = st.multiselect(
         "What pokemon do you want?",
