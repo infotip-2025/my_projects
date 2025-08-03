@@ -92,13 +92,17 @@ pivoted_df.sort_index(ascending=False, inplace=True)
 
 # number_of_recent_readings = 1093
 
-number_of_recent_readings = \
-    int(
-        st.text_input(
-            "Provide number of recent records to dislplay?",
-            83,
-            )
-    )
+try:
+    number_of_recent_readings = \
+        int(
+            st.text_input(
+                "Provide integer number of recent records to dislplay?",
+                83,
+                )
+        )
+except ValueError:
+    st.warning('Not an integer provided!')
+    number_of_recent_readings = 83
 
 fig_01_df = pivoted_df.iloc[:number_of_recent_readings].copy()
 
