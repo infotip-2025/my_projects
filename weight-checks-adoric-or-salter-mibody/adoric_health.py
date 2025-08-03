@@ -1,4 +1,5 @@
 import os
+import sys
 import read_my_file as rmf
 
 import pandas as pd
@@ -21,6 +22,22 @@ full_path = '/mount/src/my_projects/weight-checks-adoric-or-salter-mibody/Data'
 # current_dir = os.getcwd()
 # os.chdir(full_path)
 
+pages = {
+    "Weight page": [
+        st.Page("/weight-checks-adoric-or-salter-mibody/adoric_health.py", title="Check body mass data"),
+        # st.Page("manage_account.py", title="Manage your account"),
+    ],
+    "Pokemon page": [
+        st.Page("/pokemon/pokemon.py", title="Pokemons"),
+        # st.Page("trial.py", title="Try it out"),
+    ],
+}
+
+pg = st.navigation(pages)
+pg.run()
+
+st.write(get_ipython().__class__.__module__)
+st.write(os.cwd)
 
 # print(full_path)
 
