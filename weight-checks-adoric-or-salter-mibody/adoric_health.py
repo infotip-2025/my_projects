@@ -1,5 +1,4 @@
 import os
-# import sys
 import read_my_file as rmf
 
 import pandas as pd
@@ -22,7 +21,6 @@ full_path = '/mount/src/my_projects/weight-checks-adoric-or-salter-mibody/Data'
 # current_dir = os.getcwd()
 # os.chdir(full_path)
 
-# st.write(sys.get_ipython().__class__.__module__)
 st.write(os.cwd)
 
 # print(full_path)
