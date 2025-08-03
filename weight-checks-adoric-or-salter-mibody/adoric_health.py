@@ -345,16 +345,16 @@ with cols[0]:
         )
 
 with cols[1]:
-    options = st.multiselect(
+    options1 = st.multiselect(
         "What pokemon do you want?",
         my_list,
         default=my_list[0],
         max_selections=1
     )
     
-    if len(options) > 0:
-        st.header(options[0])
-        my_mask = pokemon_df['name'] == options[0]
+    if len(options1) > 0:
+        st.header(options1[0])
+        my_mask = pokemon_df['name'] == options1[0]
         selectedpokemon_df = pokemon_df[my_mask]
         pokedex_number = selectedpokemon_df['pokedex_number'].to_list()
         pokedex_number = pokedex_number[0]
