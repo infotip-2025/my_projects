@@ -18,6 +18,16 @@ import random
 # '/mount/src/my_projects/weight-checks-adoric-or-salter-mibody/Data'
 full_path = 'Data'
 
+if os.environ.get("IS_STREAMLIT_SHARING"):
+    full_path = \
+        '/mount/src/my_projects/weight-checks-adoric-or-salter-mibody/Data'
+else:
+    drive = 'u:'
+    path_a = 'OneDrive'
+    path_b = 'DRIVE_GOOGLE'
+    path_c = 'Adoric health'
+    full_path = os.path.join(drive, '/', path_a, path_b, path_c)
+
 ## '''
 ## pick current dir - not needed for this purpose
 ## and change working dir to the required one
