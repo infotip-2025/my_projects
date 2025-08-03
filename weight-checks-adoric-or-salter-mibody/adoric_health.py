@@ -325,10 +325,10 @@ options = st.multiselect(
     "What pokemon do you want?",
     my_list,
     default=my_list[0],
-    max_selections=4
+    max_selections=1
     )
 
-with cols[0]:   
+with cols[2]:   
     if len(options) > 0:
         st.header(options[0])
         my_mask = pokemon_df['name'] == options[0]
@@ -343,4 +343,3 @@ with cols[0]:
         st.image(
             f'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/1.png'
         )
-
