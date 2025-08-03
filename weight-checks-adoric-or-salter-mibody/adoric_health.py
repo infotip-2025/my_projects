@@ -317,7 +317,7 @@ st.image(
     f'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/{pokedex_number}.png'
 )
 
-my_list = pokemon_df['Name'].to_list()
+my_list = pokemon_df['name'].to_list()
 
 options = st.multiselect(
     "What pokemon do you want?",
@@ -325,7 +325,7 @@ options = st.multiselect(
     default=my_list[0],
     max_selections=1
 )
-options = pokemon_df[pokemon_df['Name'] == options]['pokedex_number']
+options = pokemon_df[pokemon_df['name'] == options]['pokedex_number']
 # ! st.write("You selected:", options)
 # ! st.write("You selected:", sorted(options))
 
