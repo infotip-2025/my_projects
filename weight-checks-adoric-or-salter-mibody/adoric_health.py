@@ -347,3 +347,19 @@ with cols[0]:
         st.image(
             f'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/1.png'
         )
+
+with cols[1]:   
+    if len(options) > 1:
+        st.header(options[1])
+        my_mask = pokemon_df['name'] == options[1]
+        selectedpokemon_df = pokemon_df[my_mask]
+        pokedex_number = selectedpokemon_df['pokedex_number'].to_list()
+        pokedex_number = pokedex_number[0]
+        st.image(
+            f'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/{pokedex_number}.png'
+        )
+    else:
+        st.warning('No range selected so the default one is displayed:')
+        st.image(
+            f'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/1.png'
+        )
