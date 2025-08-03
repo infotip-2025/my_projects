@@ -4,5 +4,5 @@ import pandas as pd
 
 
 def read():
-    df = pd.read_csv('./pokemon.py')
+    df = pd.read_csv('./data/pokemon (4).csv')
     return df
