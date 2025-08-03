@@ -336,7 +336,7 @@ if len(options) > 0:
     my_mask = pokemon_df['name'] == options[0]
     selectedpokemon_df = pokemon_df[my_mask]
     st.write(selectedpokemon_df)
-    st.write(selectedpokemon_df['pokedex_number'])
+    st.write(selectedpokemon_df['pokedex_number'].to_list())
     st.image(
         f'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/{selectedpokemon_df['pokedex_number']}.png'
     )
