@@ -3,6 +3,15 @@ import pandas as pd
 import re
 import time
 
+def MustBeGreaterThanZero (x):
+    if x <= 0:
+        return ''
+    else:
+        try: 
+            return int(x)
+        except ValueError:
+            return x
+    
 def select_tablets(required_dose, stock):   
     # sorts stock dictionary by doses from lowest to highest
     stock = dict(sorted(stock.items()))
@@ -63,14 +72,17 @@ def select_tablets(required_dose, stock):
                 composed_dose_total = \
                     sum([x*y for x, y in doses_composition.items()])
                 # ---- print(f'Had to remove a tablet - recalculated composed_dose_total: {composed_dose_total}')
-        
+
         return (doses_composition, stock, 1)
-    
-    
+
+
 # Start counter
 start_time = time.time()
 
+# ! Change this if you want to read from live Google Sheets !
 use_file_not_url = True
+# ! Change this if you want to read from live Google Sheets !
+
 file = '''t:/_DOWNLOAD_/ROGcio/Chlanie browara i reszta statystyk Sprinkwell.xlsx'''
 
 full_google_link = '''https://docs.google.com/spreadsheets/d/
@@ -101,7 +113,7 @@ df_collections.dropna(
 df_dosage = df.loc[:, 'Date.1':'Evening']
 df_dosage.rename(columns={
     'Date.1': 'Date', 'Name.1': 'Name',
-    'Morning': '6:00', 'Afternoon': '12:00', 'Evening': '18:00'},
+    }, # 'Morning': '6:00', 'Afternoon': '12:00', 'Evening': '18:00'},
                  inplace=True
                  )
 df_dosage.dropna(
@@ -110,7 +122,7 @@ df_dosage.dropna(
 # df_dosage.fillna(
 #     value='', method=None, inplace=True
 #     )
-
+'''
 # unpivot three columns
 df_dosage = pd.melt(df_dosage,
                     id_vars=['Date', 'Name'],
@@ -143,12 +155,7 @@ df_dosage.drop(columns=['Date', 'Day_Time'], inplace=True)
 #     inplace = True ## Have the changes take place
 # )
 
-start_date = '2025-05-12'
-end_date = '2025-07-28'
-times = ['06:00', '12:00', '18:00']
 
-# Create the full datetime index
-full_index = pd.date_range(start=start_date, end=end_date, freq="D")
 full_datetimes = pd.to_datetime(
     [f"{date.date()} {time}" for date in full_index for time in times]
 )
@@ -156,12 +163,64 @@ full_datetimes = pd.to_datetime(
 # Reindex the original DataFrame to include the full range
 #df_dosage = df_dosage.reindex(full_datetimes)
 #df_dosage.sort_index(inplace=True)
+'''
 
-print(df_dosage.columns)
-print(df_collections.loc[:])
-print()
-print(df_dosage.loc[:])
+df_dosage.fillna(0, inplace=True)
+df_dosage['daily_dose_mg'] = (df_dosage['Morning'] + df_dosage['Afternoon'] + df_dosage['Evening'])
+df_dosage.drop(columns=['Morning', 'Afternoon', 'Evening'], inplace=True)
 
+df_collections['collected_today_mg'] = df_collections['Quantity'] * df_collections['Size (mg)']
+df_collections.drop(columns=['Quantity', 'Size (mg)'], inplace=True)
+
+# unpivot three columns
+df_dosage = df_dosage.pivot(columns=['Name'], values=['daily_dose_mg'], index=['Date']) #.fillna(0)
+df_collections = df_collections.pivot(columns=['Name'], values=['collected_today_mg'], index=['Date']) #.fillna(0)
+
+df_dosage.columns = df_dosage.columns.droplevel(0)
+df_collections.columns = df_collections.columns.droplevel(0)
+
+columns_iterator = df_collections.columns
+
+for i_column in columns_iterator:
+    df_collections.rename(columns={i_column: i_column + '_in'}, inplace=True)
+    df_dosage.rename(columns={i_column: i_column + '_out'}, inplace=True)
+    
+df_full = df_collections.merge(df_dosage, how='outer', on='Date')
+
+start_date = '2025-05-12'
+end_date = '2025-08-28'
+# Create the full datetime index
+full_index = pd.date_range(start=start_date, end=end_date, freq="D")
+
+df_full = df_full.reindex(full_index)
+df_full.sort_index(inplace=True)
+
+
+columns_iterator_new = df_full.columns
+for i_column in columns_iterator_new:
+    if '_out' in i_column:
+        df_full[i_column].ffill(inplace=True)
+    elif '_in' in i_column:
+        df_full[i_column].fillna(0, inplace=True)
+
+for i_column in columns_iterator:
+    df_full[i_column] = df_full[i_column + '_in'].cumsum() - df_full[i_column + '_out'].cumsum()    
+    df_full[i_column] = df_full[i_column].apply(MustBeGreaterThanZero).fillna('')
+        
+# for i_column in columns_iterator:
+#     df_full[i_column]=None
+#     for i_row in range(len(df_full)):
+#         df_full[i_column][i_row] = df_full[i_column+'_in'][i_row] - df_full[i_column+'_out'][i_row]
+
+print(df_collections)
+print(df_dosage)
+df_full.drop(columns=['Atorvastatin_in', 'Dapagliflozin_in', 'Metformin_in', 'Atorvastatin_out', 'Dapagliflozin_out', 'Metformin_out'], inplace=True)
+print(df_full[49:])
+
+df_full.to_csv('./medicines.csv')
+df_full.to_excel('./medicines.xlsx', sheet_name='RunningTotal',)
+df_full.to_markdown('./medicines.md',)
 # Show counter
 end_time = time.time()
 print(f"\nElapsed Time: {round(end_time-start_time, 2)} seconds")
+
