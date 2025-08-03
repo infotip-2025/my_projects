@@ -325,7 +325,10 @@ options = st.multiselect(
     default=my_list[0],
     max_selections=1
 )
-st.write(pokemon_df[pokemon_df['name'] == options]) # ['pokedex_number']
+
+my_mask = pokemon_df['name'] == options
+st.write(my_mask)
+st.write(pokemon_df[my_mask])  # ['pokedex_number']
 # ! st.write("You selected:", options)
 # ! st.write("You selected:", sorted(options))
 
