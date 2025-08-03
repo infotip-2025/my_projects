@@ -302,7 +302,7 @@ st.dataframe(pokemon_df)
 
 
 try:
-    link = \
+    pokedex_number = \
         int(
             st.text_input(
                 "Provide pokemon pokedex_number:",
@@ -311,7 +311,7 @@ try:
         )
 except ValueError:
     st.warning('A non-integer provided! Used 1 - default value.')
-    link = 1
+    pokedex_number = 1
 
 st.image(
     f'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/{pokedex_number}.png'
