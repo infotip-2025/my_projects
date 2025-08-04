@@ -322,15 +322,15 @@ st.dataframe(pokemon_df)
 
 my_list = pokemon_df['name'].to_list()
 
-col1, col2, col3, col4 = st.columns(4)
-cols = (col1, col2, col3, col4)
-
 options = st.multiselect(
     "What pokemon do you want?",
     my_list,
     # default=my_list[random.randint(0, len(my_list))],
     max_selections=4
     )
+
+col1, col2, col3, col4 = st.columns(4)
+cols = (col1, col2, col3, col4)
 
 for i in range(4):
     with cols[i]:   
