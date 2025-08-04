@@ -344,7 +344,9 @@ for i in range(4):
                 f'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/{pokedex_number}.png'
             )
         else:
-            st.warning('No range selected so the default one is displayed:')
+            pokedex_number = random.randint(0, len(my_list))
+            st.warning(f'Random one is displayed (pokedex {pokedex_number}):')
             st.image(
                 f'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/1.png'
             )
+
