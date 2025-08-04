@@ -24,7 +24,7 @@ import pokemon as pok
 # ! st.write(os.environ.items())
 # ! ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑
 
-st.write('Jeb sie chuju!')
+# st.write('Jeb sie chuju!')
 
 st.write(os.environ['HOSTNAME'])
 
@@ -318,7 +318,7 @@ st.dataframe(pokemon_df)
 #     f'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/{pokedex_number}.png'
 # )
 
-st.warning('KURWA!!!')
+# st.warning('KURWA!!!')
 
 my_list = pokemon_df['name'].to_list()
 
@@ -335,6 +335,7 @@ options = st.multiselect(
 for i in range(4):
     with cols[i]:   
         if len(options) > i:
+            st.warning('Your chosen pokemon:')
             st.header(options[i])
             my_mask = pokemon_df['name'] == options[i]
             selectedpokemon_df = pokemon_df[my_mask]
