@@ -352,4 +352,4 @@ for i in range(4):
                 f'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/{pokedex_number}.png'
             )
 
-st.write(len(pokemon_df['name']),len(pokemon_df['name'].unique()))
+st.write(len(pokemon_df['name']),len(pokemon_df['name'].drop_duplicates()))
