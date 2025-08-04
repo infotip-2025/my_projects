@@ -345,8 +345,8 @@ for i in range(4):
             )
         else:
             pokedex_number = random.randint(0, len(my_list))
-            st.header(my_list[i])
             st.warning(f'Random one is displayed (pokedex {pokedex_number}):')
+            st.header(my_list[i])
             st.image(
                 f'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/{pokedex_number}.png'
             )
