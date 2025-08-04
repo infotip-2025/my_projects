@@ -328,7 +328,7 @@ cols = (col1, col2, col3, col4)
 options = st.multiselect(
     "What pokemon do you want?",
     my_list,
-    default=my_list[random.randint(0, len(my_list))],
+    # default=my_list[random.randint(0, len(my_list))],
     max_selections=4
     )
 
@@ -345,6 +345,7 @@ for i in range(4):
             )
         else:
             pokedex_number = random.randint(0, len(my_list))
+            st.header(my_list[i])
             st.warning(f'Random one is displayed (pokedex {pokedex_number}):')
             st.image(
                 f'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/{pokedex_number}.png'
