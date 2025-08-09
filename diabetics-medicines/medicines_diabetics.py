@@ -14,7 +14,7 @@ def MustBeGreaterThanZero(x):
             return x
 
 
-def select_tablets(required_dose, stock):   
+def select_tablets(required_dose, stock):
     # sorts stock dictionary by doses from lowest to highest
     stock = dict(sorted(stock.items()))
 
@@ -51,7 +51,7 @@ def select_tablets(required_dose, stock):
 
             while stock[tablets_doses[dose_to_add_index]] == 0:
                 dose_to_add_index += 1
-            # add a tablet to my composition and remove it from stock    
+            # add a tablet to my composition and remove it from stock
             doses_composition[tablets_doses[dose_to_add_index]] += 1
             stock[tablets_doses[dose_to_add_index]] -= 1
             # count the composed dose
@@ -67,7 +67,7 @@ def select_tablets(required_dose, stock):
                     tablets_doses[dose_to_remove_index]
                         ] == 0:
                     dose_to_remove_index += 1
-                # add a tablet back to stock and remove it from my composition    
+                # add a tablet back to stock and remove it from my composition
                 doses_composition[tablets_doses[dose_to_remove_index]] -= 1
                 stock[tablets_doses[dose_to_remove_index]] += 1
                 # recalculate composed dose
@@ -87,8 +87,8 @@ start_time = time.time()
 # ??????????????????????????????????????????????????????????????????????????????????????????????????????????????????
 # ?????????????????????????????????????????????????????????
 # ! If you want to simulate an extra
-# ! collection, set extra_collection_requested 
-# ! to True and provide an extra date 
+# ! collection, set extra_collection_requested
+# ! to True and provide an extra date
 # ! e.g. tomorrows date. Additionally
 # ! set values in the below df creator
 extra_collection_requested = st.checkbox('Do you want to simulate an extra collection?')
@@ -101,28 +101,15 @@ extra_collection_date_time = \
         extra_collection_date_time,
         min_value='today'
         )
-# st.warning(extra_collection_date_time)
-
-# # !!! User prompt to decide if extra collection should be considered: 
-# # ! the comented out thing does not work!   
-# response = st.chat_input('Do you want to add a simulated collection? (Yy/Nn): ')
-# if response in ['N','n']:
-#     extra_collection_requested = False
-# else:
-#     response = st.chat_input(f'Default extra collection date is: {extra_collection_date_time}.\n Provide ne date if needed: ')
-#     if response:
-#         try: 
-#             pd.to_datetime(response)
-#         except ValueError:
-#             st.warning('Your entry is not in the date format!')
-
-
-    
 
 df_extra = pd.DataFrame(
     {
-        'Date': [extra_collection_date_time, extra_collection_date_time, extra_collection_date_time] ,
-        'Name': ['Atorvastatin', 'Dapagliflozin','Metformin'],
+        'Date': [extra_collection_date_time,
+                 extra_collection_date_time,
+                 extra_collection_date_time],
+        'Name': ['Atorvastatin',
+                 'Dapagliflozin',
+                 'Metformin'],
         'collected_today_mg': [28*40.0, 28*5.0, 56*1000],
     },
     index=[10000, 10001, 10002]
@@ -136,7 +123,8 @@ df_extra = pd.DataFrame(
 use_file_not_url = True
 # ! Change this if you want to read from live Google Sheets !
 
-file = '''t:/_DOWNLOAD_/ROGcio/Chlanie browara i reszta statystyk Sprinkwell.xlsx'''
+file = 't:/_DOWNLOAD_/ROGcio/' + \
+    'Chlanie browara i reszta statystyk Sprinkwell.xlsx'
 
 full_google_link = '''https://docs.google.com/spreadsheets/d/
 1n3aDcsdgAMb17yXnmKZHUm4hK7P8exlkO6H0NdvLZZ8/edit?usp=sharing'''
@@ -270,7 +258,7 @@ for i_column in columns_iterator_new:
 for i_column in columns_iterator:
     df_full[i_column] = \
         df_full[i_column + '_in'].cumsum() - \
-        df_full[i_column + '_out'].cumsum()    
+        df_full[i_column + '_out'].cumsum()
     df_full[i_column] = \
         df_full[i_column].apply(MustBeGreaterThanZero).fillna('')
 
