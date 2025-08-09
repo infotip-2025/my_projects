@@ -186,66 +186,67 @@ if os.environ.get('HOSTNAME') != 'streamlit':
 
     st.dataframe(weight_weekly_average_df)
 
-    df = pd.DataFrame(
-        {
-            "Command": ["**st.table**", "*st.dataframe*"],
-            "Type": ["`static`", "`interactive`"],
-            "Docs": [
-                "[:rainbow[docs]]\
-    (https://docs.streamlit.io/develop/api-reference/data/st.dataframe)",
-                "[:book:]\
-    (https://docs.streamlit.io/develop/api-reference/data/st.table)",
-            ],
-        }
-    )
-    st.table(df)
+    # df = pd.DataFrame(
+    #     {
+    #         "Command": ["**st.table**", "*st.dataframe*"],
+    #         "Type": ["`static`", "`interactive`"],
+    #         "Docs": [
+    #             "[:rainbow[docs]]\
+    # (https://docs.streamlit.io/develop/api-reference/data/st.dataframe)",
+    #             "[:book:]\
+    # (https://docs.streamlit.io/develop/api-reference/data/st.table)",
+    #         ],
+    #     }
+    # )
+    # st.table(df)
 
-    df = pd.DataFrame(
-        {
-            "name": ["Roadmap", "Extras", "Issues"],
-            "url": [
-                "https://roadmap.streamlit.app",
-                "https://extras.streamlit.app",
-                "https://issues.streamlit.app"
-                ],
-            "stars": [random.randint(0, 1000) for _ in range(3)],
-            "views_history": [
-                [random.randint(0, 5000) for _ in range(30)] for _ in range(3)
-                ],
-        }
-    )
+    # df = pd.DataFrame(
+    #     {
+    #         "name": ["Roadmap", "Extras", "Issues"],
+    #         "url": [
+    #             "https://roadmap.streamlit.app",
+    #             "https://extras.streamlit.app",
+    #             "https://issues.streamlit.app"
+    #             ],
+    #         "stars": [random.randint(0, 1000) for _ in range(3)],
+    #         "views_history": [
+    #             [random.randint(0, 5000) for _ in range(30)] for _ in range(3)
+    #             ],
+    #     }
+    # )
 
-    st.dataframe(
-        df,
-        column_config={
-            "name": "App name",
-            "stars": st.column_config.NumberColumn(
-                "Github Stars",
-                help="Number of stars on GitHub",
-                format="%d ⭐",
-            ),
-            "url": st.column_config.LinkColumn("App URL"),
-            "views_history": st.column_config.LineChartColumn(
-                "Views (past 30 days)", y_min=0, y_max=5000
-            ),
-        },
-        hide_index=True,
-    )
+    # st.dataframe(
+    #     df,
+    #     column_config={
+    #         "name": "App name",
+    #         "stars": st.column_config.NumberColumn(
+    #             "Github Stars",
+    #             help="Number of stars on GitHub",
+    #             format="%d ⭐",
+    #         ),
+    #         "url": st.column_config.LinkColumn("App URL"),
+    #         "views_history": st.column_config.LineChartColumn(
+    #             "Views (past 30 days)", y_min=0, y_max=5000
+    #         ),
+    #     },
+    #     hide_index=True,
+    # )
 
-    st.image(
-        '''https://media.istockphoto.com/id/825383494/photo/
-    business-man-pushing-large-stone-up-to-hill-business-heavy-tasks-and-problems-concept.jpg
-    ?s=612x612&w=0&k=20&c=wtqvbQ6OIHitRVDPTtoT_1HKUAOgyqa7YzzTMXqGRaQ=''',
-        caption='Syzyf', use_container_width=True
-        )
+    # st.image(
+    #     '''https://media.istockphoto.com/id/825383494/photo/
+    # business-man-pushing-large-stone-up-to-hill-business-heavy-tasks-and-problems-concept.jpg
+    # ?s=612x612&w=0&k=20&c=wtqvbQ6OIHitRVDPTtoT_1HKUAOgyqa7YzzTMXqGRaQ=''',
+    #     caption='Syzyf', use_container_width=True
+    #     )
 
-    options = ["North", "East", "South", "West"]
-    selection = st.pills("Directions", options, selection_mode="single")
-    st.markdown(f"Your selected options: {selection}.")
+    # options = ["North", "East", "South", "West"]
+    # selection = st.pills("Directions", options, selection_mode="single")
+    # st.markdown(f"Your selected options: {selection}.")
 
-    options = ["North", "East", "South", "West"]
-    selection = st.pills("Directions", options, selection_mode="multi")
-    st.markdown(f"Your selected options: {selection}.")
+    # options = ["North", "East", "South", "West"]
+    # selection = st.pills("Directions", options, selection_mode="multi")
+    # st.markdown(f"Your selected options: {selection}.")
+    
     my_list = weight_weekly_average_df.index.to_list()
 
     options = st.multiselect(
@@ -264,50 +265,48 @@ if os.environ.get('HOSTNAME') != 'streamlit':
         st.write('No range selected so the last entry is displayed:')
         st.dataframe(weight_weekly_average_df.iloc[:1])
 
-    st.write("""
-    **INDUSTRY**
-    Software Application
-    """)
-    # There are 2 spaces after **INDUSTRY**
-    # Or use the break with unsafe_allow_html=True.
-    link = "https://media.istockphoto.com/id/825383494/photo/\
-    business-man-pushing-large-stone-up-to-hill-business-heavy\
-    -tasks-and-problems-concept.jpg?s=612x612&w=0&k=20&c=\
-    wtqvbQ6OIHitRVDPTtoT_1HKUAOgyqa7YzzTMXqGRaQ="
-    st.write(f"""
-    ### Syzyf
-    <p><img src="{link}" alt="Syzyfincio"></p>
-    <p href="{link}">Tralala</p>
-    """, unsafe_allow_html=True)
+    # st.write("""
+    # **INDUSTRY**
+    # Software Application
+    # """)
+    # # There are 2 spaces after **INDUSTRY**
+    # # Or use the break with unsafe_allow_html=True.
+    # link = "https://media.istockphoto.com/id/825383494/photo/\
+    # business-man-pushing-large-stone-up-to-hill-business-heavy\
+    # -tasks-and-problems-concept.jpg?s=612x612&w=0&k=20&c=\
+    # wtqvbQ6OIHitRVDPTtoT_1HKUAOgyqa7YzzTMXqGRaQ="
+    # st.write(f"""
+    # ### Syzyf
+    # <p><img src="{link}" alt="Syzyfincio"></p>
+    # <p href="{link}">Tralala</p>
+    # """, unsafe_allow_html=True)
 
-    col1, col2, col3 = st.columns(3)
-    rows_slice = int(len(fig_01_df)/3)
-    container_h = (3+(1+rows_slice)*35)
-    with col1:
-        st.header("Part I")
-        st.dataframe(fig_01_df[['Weight', 'BMI']].iloc[:rows_slice],
-                     height=container_h)
-    with col2:
-        st.header("Part II")
-        st.dataframe(fig_01_df[['Weight', 'BMI']].iloc[rows_slice:2*rows_slice],
-                     height=container_h)
-    with col3:
-        st.header("Part III")
-        st.dataframe(fig_01_df[['Weight', 'BMI']].iloc[2*rows_slice:],
-                     height=container_h)
+    # col1, col2, col3 = st.columns(3)
+    # rows_slice = int(len(fig_01_df)/3)
+    # container_h = (3+(1+rows_slice)*35)
+    # with col1:
+    #     st.header("Part I")
+    #     st.dataframe(fig_01_df[['Weight', 'BMI']].iloc[:rows_slice],
+    #                  height=container_h)
+    # with col2:
+    #     st.header("Part II")
+    #     st.dataframe(fig_01_df[['Weight', 'BMI']].iloc[rows_slice:2*rows_slice],
+    #                  height=container_h)
+    # with col3:
+    #     st.header("Part III")
+    #     st.dataframe(fig_01_df[['Weight', 'BMI']].iloc[2*rows_slice:],
+    #                  height=container_h)
 
 # ???????????????????????????????????????????????????????
 # ???????????? local only - weight ??????????????????????
 # ???????????????????????????????????????????????????????
 
-st.write(os.getcwdb())
+st.write(os.getcwd())
 
-file_to_read = \
-    os.getcwd() + \
-    '/weight-checks-adoric-or-salter-mibody/data_pokemon/pokemon (4).csv'
-pokemon_df = pok.read(file_to_read)
-
-st.dataframe(pokemon_df)
+# file_to_read = \
+#     os.getcwd() + \
+#     '/weight-checks-adoric-or-salter-mibody/data_pokemon/pokemon (4).csv'
+# pokemon_df = pok.read(file_to_read)
 
 # link_temp = 'https://img.pokemondb.net/artwork/pikachu.jpg'
 
@@ -329,36 +328,38 @@ st.dataframe(pokemon_df)
 
 # st.warning('KURWA!!!')
 
-my_list = pokemon_df['name'].to_list()
+# my_list = pokemon_df['name'].to_list()
 
-options = st.multiselect(
-    "What pokemon do you want?",
-    my_list,
-    # default=my_list[random.randint(0, len(my_list))],
-    max_selections=4
-    )
+# options = st.multiselect(
+#     "What pokemon do you want?",
+#     my_list,
+#     # default=my_list[random.randint(0, len(my_list))],
+#     max_selections=4
+#     )
 
-col1, col2, col3, col4 = st.columns(4)
-cols = (col1, col2, col3, col4)
+# col1, col2, col3, col4 = st.columns(4)
+# cols = (col1, col2, col3, col4)
 
-for i in range(4):
-    with cols[i]:   
-        if len(options) > i:
-            st.warning('Your chosen pokemon:')
-            st.header(options[i])
-            my_mask = pokemon_df['name'] == options[i]
-            selectedpokemon_df = pokemon_df[my_mask]
-            pokedex_number = selectedpokemon_df['pokedex_number'].to_list()
-            pokedex_number = pokedex_number[0]
-            st.image(
-                f'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/{pokedex_number}.png'
-            )
-        else:
-            pokedex_number = random.randint(0, len(my_list))
-            st.warning(f'Random one is displayed (pokedex {pokedex_number}):')
-            st.header(my_list[i])
-            st.image(
-                f'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/{pokedex_number}.png'
-            )
+# for i in range(4):
+#     with cols[i]:   
+#         if len(options) > i:
+#             st.warning('Your chosen pokemon:')
+#             st.header(options[i])
+#             my_mask = pokemon_df['name'] == options[i]
+#             selectedpokemon_df = pokemon_df[my_mask]
+#             pokedex_number = selectedpokemon_df['pokedex_number'].to_list()
+#             pokedex_number = pokedex_number[0]
+#             st.image(
+#                 f'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/{pokedex_number}.png'
+#             )
+#         else:
+#             pokedex_number = random.randint(0, len(my_list))
+#             st.warning(f'Random one is displayed (pokedex {pokedex_number}):')
+#             st.header(my_list[i])
+#             st.image(
+#                 f'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/{pokedex_number}.png'
+#             )
 
-st.write(len(pokemon_df['name']),len(pokemon_df['name'].drop_duplicates()))
+# st.write(len(pokemon_df['name']),len(pokemon_df['name'].drop_duplicates()))
+
+# st.dataframe(pokemon_df)

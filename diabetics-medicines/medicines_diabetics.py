@@ -1,9 +1,10 @@
-
 import pandas as pd
 import re
 import time
+import streamlit as st
 
-def MustBeGreaterThanZero (x):
+
+def MustBeGreaterThanZero(x):
     if x <= 0:
         return ''
     else:
@@ -11,7 +12,8 @@ def MustBeGreaterThanZero (x):
             return int(x)
         except ValueError:
             return x
-    
+
+
 def select_tablets(required_dose, stock):   
     # sorts stock dictionary by doses from lowest to highest
     stock = dict(sorted(stock.items()))
@@ -33,7 +35,7 @@ def select_tablets(required_dose, stock):
         # takes doses from dictionary
         tablets_doses = list(stock.keys())
         # takes quantities of particular doses from dictionary
-        tablets_quantities = list(stock.values())
+        # tablets_quantities = list(stock.values())
         
         # ---- print(dict(zip(tablets_doses, tablets_quantities)))
         
@@ -79,6 +81,57 @@ def select_tablets(required_dose, stock):
 # Start counter
 start_time = time.time()
 
+
+# ?????????????????????????????????????????????????????????
+# ??????????????????????????????????????????????????????????????????????????????????????????????????????????????????
+# ??????????????????????????????????????????????????????????????????????????????????????????????????????????????????
+# ?????????????????????????????????????????????????????????
+# ! If you want to simulate an extra
+# ! collection, set extra_collection_requested 
+# ! to True and provide an extra date 
+# ! e.g. tomorrows date. Additionally
+# ! set values in the below df creator
+extra_collection_requested = st.checkbox('Do you want to simulate an extra collection?')
+# st.warning(extra_collection_requested)
+extra_collection_date_time = \
+    pd.to_datetime('today').date() + pd.Timedelta('1 days')  # time is redundand as plenty of the code below was amended
+extra_collection_date_time = \
+    st.date_input(
+        f'Enter new date. The default one is {extra_collection_date_time}: ',
+        extra_collection_date_time,
+        min_value='today'
+        )
+# st.warning(extra_collection_date_time)
+
+# # !!! User prompt to decide if extra collection should be considered: 
+# # ! the comented out thing does not work!   
+# response = st.chat_input('Do you want to add a simulated collection? (Yy/Nn): ')
+# if response in ['N','n']:
+#     extra_collection_requested = False
+# else:
+#     response = st.chat_input(f'Default extra collection date is: {extra_collection_date_time}.\n Provide ne date if needed: ')
+#     if response:
+#         try: 
+#             pd.to_datetime(response)
+#         except ValueError:
+#             st.warning('Your entry is not in the date format!')
+
+
+    
+
+df_extra = pd.DataFrame(
+    {
+        'Date': [extra_collection_date_time, extra_collection_date_time, extra_collection_date_time] ,
+        'Name': ['Atorvastatin', 'Dapagliflozin','Metformin'],
+        'collected_today_mg': [28*40.0, 28*5.0, 56*1000],
+    },
+    index=[10000, 10001, 10002]
+)
+# ?????????????????????????????????????????????????????????
+# ??????????????????????????????????????????????????????????????????????????????????????????????????????????????????
+# ??????????????????????????????????????????????????????????????????????????????????????????????????????????????????
+# ?????????????????????????????????????????????????????????
+
 # ! Change this if you want to read from live Google Sheets !
 use_file_not_url = True
 # ! Change this if you want to read from live Google Sheets !
@@ -105,122 +158,132 @@ else:
         google_key_only + '&output=xlsx'
     excel_source = url
 
+# read from google sheets (file or online)
 df = pd.read_excel(excel_source, sheet_name=sheet_name)
+
+# select relevant columns from spreadsheet
+# for collections table and drop extra
+# empty lines
 df_collections = df.loc[:, 'Date':'Size (mg)']
 df_collections.dropna(
     axis=0, how='any', subset=['Name'], inplace=True
     )
+
+# select relevant columns from spreadsheet
+# for dosage table and drop extra
+# empty lines
 df_dosage = df.loc[:, 'Date.1':'Evening']
 df_dosage.rename(columns={
     'Date.1': 'Date', 'Name.1': 'Name',
-    }, # 'Morning': '6:00', 'Afternoon': '12:00', 'Evening': '18:00'},
+    },
                  inplace=True
                  )
 df_dosage.dropna(
     axis=0, how='any', subset=['Name'], inplace=True
     )
-# df_dosage.fillna(
-#     value='', method=None, inplace=True
-#     )
-'''
-# unpivot three columns
-df_dosage = pd.melt(df_dosage,
-                    id_vars=['Date', 'Name'],
-                    value_vars=['6:00', '12:00', '18:00'],
-                    var_name='Day_Time',
-                    value_name='Dosage'
-                    )
 
-df_dosage['Date'] = df_dosage['Date'].astype(str)
-
-df_dosage['Index'] = pd.to_datetime(
-    df_dosage['Date']+df_dosage['Day_Time'], format='%Y-%m-%d%H:%M'
-    )
-df_dosage.sort_values(
-    by='Index', ascending=True, inplace=True
-    )
-df_dosage.set_index('Index', inplace=True)
-
-# print(df_dosage.dtypes)
-
-mask_empty_dosage_removed = df_dosage['Dosage'].notnull()
-df_dosage = df_dosage[mask_empty_dosage_removed]
-
-df_dosage.drop(columns=['Date', 'Day_Time'], inplace=True)
-
-# .fillna(
-#     value = {'deck':'X'},
-#     method = None, ## We're using
-#                       a pre-determined value, not backfilling/padding
-#     inplace = True ## Have the changes take place
-# )
-
-
-full_datetimes = pd.to_datetime(
-    [f"{date.date()} {time}" for date in full_index for time in times]
-)
-
-# Reindex the original DataFrame to include the full range
-#df_dosage = df_dosage.reindex(full_datetimes)
-#df_dosage.sort_index(inplace=True)
-'''
-
+# replace Null with zeroes and add all doses from same day
+# to calculate the whole day dosage for particular tablets
+# then drop columns that were used for this calculation
 df_dosage.fillna(0, inplace=True)
 df_dosage['daily_dose_mg'] = (df_dosage['Morning'] + df_dosage['Afternoon'] + df_dosage['Evening'])
 df_dosage.drop(columns=['Morning', 'Afternoon', 'Evening'], inplace=True)
 
+# calculate total of particular medicine (mg)
+# collected on particular day
+# then drop columns that were used for this calculation
 df_collections['collected_today_mg'] = df_collections['Quantity'] * df_collections['Size (mg)']
 df_collections.drop(columns=['Quantity', 'Size (mg)'], inplace=True)
 
-# unpivot three columns
-df_dosage = df_dosage.pivot(columns=['Name'], values=['daily_dose_mg'], index=['Date']) #.fillna(0)
-df_collections = df_collections.pivot(columns=['Name'], values=['collected_today_mg'], index=['Date']) #.fillna(0)
+# standarise 'Data' to be data only 
+# without the time component
+df_dosage['Date'] = df_dosage['Date'].apply(lambda x: pd.to_datetime(x).date())
+df_collections['Date'] = df_collections['Date'].apply(lambda x: pd.to_datetime(x).date())
 
+# st.warning('tables prepared:')
+# st.dataframe(df_collections)
+# st.dataframe(df_dosage)
+# st.write(df_collections.dtypes)
+# st.write(df_dosage.dtypes)
+
+if extra_collection_requested:
+    df_collections = pd.concat([df_collections, df_extra])
+# st.dataframe(df_collections)
+
+# unpivot three columns
+# from wide to long data structure
+df_dosage = df_dosage.pivot(columns=['Name'], values=['daily_dose_mg'], index=['Date'])
+df_collections = df_collections.pivot(columns=['Name'], values=['collected_today_mg'], index=['Date'])
+
+# drop an extra index level which appeared after pivoting
 df_dosage.columns = df_dosage.columns.droplevel(0)
 df_collections.columns = df_collections.columns.droplevel(0)
 
+# add suffixes to columns:
+# for dosage use '_out'
+# for collections use '_in'
 columns_iterator = df_collections.columns
-
 for i_column in columns_iterator:
     df_collections.rename(columns={i_column: i_column + '_in'}, inplace=True)
     df_dosage.rename(columns={i_column: i_column + '_out'}, inplace=True)
-    
-df_full = df_collections.merge(df_dosage, how='outer', on='Date')
 
+
+# merge colloections and dosage on 'Date'
+# outer, so all rows from both tables
+# are included
+df_full = df_collections.merge(df_dosage, how='outer', on='Date')
+# st.write('dosage and collections merged')
+# st.warning(type(df_full))
+# st.write(df_full)
+
+# !!!!! set dates here - start must be first medicines collection date
 start_date = '2025-05-12'
-end_date = '2025-08-28'
-# Create the full datetime index
-full_index = pd.date_range(start=start_date, end=end_date, freq="D")
+end_date = str(pd.to_datetime('today').date() + pd.Timedelta("60 days"))  # '2025-09-22'
+# st.write(f'start {type(start_date)}, end {type(end_date)}')
+# !!!!!
+
+# Create the full datetime index for required dates
+full_index = pd.date_range(start=start_date, end=end_date)   #, freq="D")
 
 df_full = df_full.reindex(full_index)
 df_full.sort_index(inplace=True)
+df_full.index = df_full.index.date
 
-
+# fill Nulls in colections with zeros (no extra medicines added)
+# fill Nulls in dosage with previous dosage value - if Null
+# then the previous dosege has not changes so is the same value 
+# as was a day before
 columns_iterator_new = df_full.columns
+# uses iterator_new with _in an _out suffixes
 for i_column in columns_iterator_new:
+    # st.warning(i_column)
     if '_out' in i_column:
         df_full[i_column].ffill(inplace=True)
     elif '_in' in i_column:
         df_full[i_column].fillna(0, inplace=True)
 
+# calculates difference between two running totals:
+# 'collections running total' (all collected till date)
+# minus
+# 'dosage running total' (all consumed till date)
+# uses 'old' iterator without _in or _out suffixes
 for i_column in columns_iterator:
-    df_full[i_column] = df_full[i_column + '_in'].cumsum() - df_full[i_column + '_out'].cumsum()    
-    df_full[i_column] = df_full[i_column].apply(MustBeGreaterThanZero).fillna('')
-        
-# for i_column in columns_iterator:
-#     df_full[i_column]=None
-#     for i_row in range(len(df_full)):
-#         df_full[i_column][i_row] = df_full[i_column+'_in'][i_row] - df_full[i_column+'_out'][i_row]
+    df_full[i_column] = \
+        df_full[i_column + '_in'].cumsum() - \
+        df_full[i_column + '_out'].cumsum()    
+    df_full[i_column] = \
+        df_full[i_column].apply(MustBeGreaterThanZero).fillna('')
 
-print(df_collections)
-print(df_dosage)
-df_full.drop(columns=['Atorvastatin_in', 'Dapagliflozin_in', 'Metformin_in', 'Atorvastatin_out', 'Dapagliflozin_out', 'Metformin_out'], inplace=True)
-print(df_full[49:])
+st.write(df_collections)
+st.write(df_dosage)
+df_full.drop(columns=['Atorvastatin_in', 'Dapagliflozin_in', 'Metformin_in',
+                      'Atorvastatin_out', 'Dapagliflozin_out', 'Metformin_out'],
+             inplace=True)
+st.write(df_full[49:])
 
 df_full.to_csv('./medicines.csv')
 df_full.to_excel('./medicines.xlsx', sheet_name='RunningTotal',)
-df_full.to_markdown('./medicines.md',)
+# df_full.to_markdown('./medicines.md',)
 # Show counter
 end_time = time.time()
-print(f"\nElapsed Time: {round(end_time-start_time, 2)} seconds")
-
+st.write(f"\nElapsed Time: {round(end_time-start_time, 2)} seconds")
