@@ -81,6 +81,8 @@ def select_tablets(required_dose, stock):
 # Start counter
 start_time = time.time()
 
+st.warning('Reading data from Google Sheets can tale around 30 seconds.')
+
 st.markdown("""<HR>""", unsafe_allow_html=True,)
 
 # ! Change this if you want to read from live Google Sheets !
