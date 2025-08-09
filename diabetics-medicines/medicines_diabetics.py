@@ -78,6 +78,38 @@ def select_tablets(required_dose, stock):
         return (doses_composition, stock, 1)
 
 
+@st.cache_data
+def load_df_from_google_sheets(from_file):
+
+    file = 't:/_DOWNLOAD_/ROGcio/' + \
+        'Chlanie browara i reszta statystyk Sprinkwell.xlsx'
+
+    full_google_link = '''https://docs.google.com/spreadsheets/d/
+    1n3aDcsdgAMb17yXnmKZHUm4hK7P8exlkO6H0NdvLZZ8/edit?usp=sharing'''
+
+    sheet_name = 'Medicines Diabetics'
+
+# use file (for testing) or online version (for regular executions)
+    if use_file_not_url:
+        excel_source = file.strip()
+    else:
+        google_key_pattern_begin = '.*/d/'
+        google_key_pattern_end = '/[^/]*'
+        google_key_only = re.sub(
+            rf'{google_key_pattern_end}', '',
+            re.sub(rf'{google_key_pattern_begin}', '', full_google_link)
+            ).strip()
+
+        url = 'https://docs.google.com/spreadsheet/ccc?key=' + \
+            google_key_only + '&output=xlsx'
+        excel_source = url
+
+    # read from google sheets (file or online)
+    loaded_df = pd.read_excel(excel_source, sheet_name=sheet_name)
+
+    return loaded_df
+
+
 # Start counter
 start_time = time.time()
 
@@ -88,14 +120,6 @@ st.markdown("""<HR>""", unsafe_allow_html=True,)
 # ! Change this if you want to read from live Google Sheets !
 use_file_not_url = st.checkbox('Read from local file? Uncheck if run remotely!!!', False)
 # ! Change this if you want to read from live Google Sheets !
-
-file = 't:/_DOWNLOAD_/ROGcio/' + \
-    'Chlanie browara i reszta statystyk Sprinkwell.xlsx'
-
-full_google_link = '''https://docs.google.com/spreadsheets/d/
-1n3aDcsdgAMb17yXnmKZHUm4hK7P8exlkO6H0NdvLZZ8/edit?usp=sharing'''
-
-sheet_name = 'Medicines Diabetics'
 
 st.markdown("""<HR>""", unsafe_allow_html=True,)
 
@@ -138,23 +162,7 @@ df_extra = pd.DataFrame(
 
 st.markdown("""<HR>""", unsafe_allow_html=True,)
 
-# use file (for testing) or online version (for regular executions)
-if use_file_not_url:
-    excel_source = file.strip()
-else:
-    google_key_pattern_begin = '.*/d/'
-    google_key_pattern_end = '/[^/]*'
-    google_key_only = re.sub(
-        rf'{google_key_pattern_end}', '',
-        re.sub(rf'{google_key_pattern_begin}', '', full_google_link)
-        ).strip()
-
-    url = 'https://docs.google.com/spreadsheet/ccc?key=' + \
-        google_key_only + '&output=xlsx'
-    excel_source = url
-
-# read from google sheets (file or online)
-df = pd.read_excel(excel_source, sheet_name=sheet_name)
+df = load_df_from_google_sheets(use_file_not_url)
 
 # select relevant columns from spreadsheet
 # for collections table and drop extra
