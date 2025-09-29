@@ -4,6 +4,7 @@ import read_my_file as rmf
 import pandas as pd
 import streamlit as st
 import plotly.express as px
+import datetime
 # import statsmodels.api as sm
 import random
 
@@ -25,6 +26,11 @@ import pokemon as pok
 # ! ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑
 
 # st.write('Jeb sie chuju!')
+
+page_layout = st.sidebar.radio(
+     "Page layout:", options=['centered', 'wide']
+ )
+st.set_page_config(layout=page_layout)
 
 st.write(os.environ['HOSTNAME'])
 
@@ -55,7 +61,7 @@ data_line_by_line, \
 # os.chdir(current_dir)
 
 # setup streamlite page
-st.set_page_config(layout="wide", initial_sidebar_state="expanded")
+# ! st.set_page_config(layout="wide", initial_sidebar_state="expanded")
 
 # rmf.print_data(data_line_by_line)
 # print('Number of processed files:', numer_of_files)
@@ -106,7 +112,7 @@ if os.environ.get('HOSTNAME') != 'streamlit':
             int(
                 st.text_input(
                     "Provide integer number of recent records to dislplay?",
-                    83,
+                    (pd.Timestamp.today() - pd.to_datetime('2025-05-12')).days
                     )
             )
     except ValueError:
@@ -121,6 +127,7 @@ if os.environ.get('HOSTNAME') != 'streamlit':
 
     st.dataframe(fig_01_df[['Weight', 'BMI']])
 
+    start_date = fig_01_df.index[0].date()
     max_weight = fig_01_df['Weight'].max()
     min_weight = fig_01_df['Weight'].min()
     # st.write(f'Max weight: {max_weight}, min weight: {min_weight}.')
@@ -134,8 +141,15 @@ if os.environ.get('HOSTNAME') != 'streamlit':
         range_y=(min_weight-1, max_weight+1),
         hover_data='Weight',
         )
-    fig_01.update_xaxes(showgrid=True, gridwidth=1, gridcolor='#dfdfdf')
-    fig_01.update_yaxes(showgrid=True, gridwidth=1, gridcolor='#dfdfdf')
+    fig_01.update_xaxes(
+        showgrid=True, 
+        gridwidth=1, 
+        gridcolor='#dfdfdf', 
+        tick0=(pd.Timestamp.today().date() - pd.Timedelta(number_of_recent_readings, 'D')),
+        dtick=7*24*60*60*1000,
+        tickangle=90,
+    )
+    fig_01.update_yaxes(showgrid=True, gridwidth=1, gridcolor='#dfdfdf', dtick=1)
 
     frequency_for_agg = st.radio(
         "Select mothly, weekly (week end Sun), weekly (week end Fri)",

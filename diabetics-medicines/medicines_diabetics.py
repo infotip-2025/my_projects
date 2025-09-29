@@ -2,6 +2,41 @@ import pandas as pd
 import re
 import time
 import streamlit as st
+from streamlit_gsheets import GSheetsConnection
+
+page_layout = st.sidebar.radio(
+     "Page layout:", options=['centered', 'wide']
+ )
+st.set_page_config(layout=page_layout)
+
+conn = st.connection("gsheets", type=GSheetsConnection)
+
+# if __name__ == "__main__":
+source_id = '1OurFLnevRNKXd6MyEyEIhNyrJ0SHYAdyadjNOEdUE8Y'
+source_url = \
+    'https://docs.google.com/spreadsheets/d/' + \
+    source_id + '/edit?usp=sharing'
+
+
+def read_google_sheets_id(
+    source_url,
+    life_cycle_minutes=1,
+    number_of_rows=10**100,
+    first_column=0,
+    last_column=0,    
+    ):
+
+    data = conn.read(
+        spreadsheet=source_url,
+        ttl=life_cycle_minutes,
+        # usecols=range(first_column, last_column),
+        nrows=number_of_rows,
+    )
+
+    return data
+
+
+# https://docs.google.com/spreadsheets/d/1OurFLnevRNKXd6MyEyEIhNyrJ0SHYAdyadjNOEdUE8Y/edit?usp=sharing
 
 
 def MustBeGreaterThanZero(x):
@@ -78,7 +113,7 @@ def select_tablets(required_dose, stock):
         return (doses_composition, stock, 1)
 
 
-@st.cache_data
+# @st.cache_data
 def load_df_from_google_sheets(from_file):
 
     file = 't:/_DOWNLOAD_/ROGcio/' + \
@@ -162,7 +197,19 @@ df_extra = pd.DataFrame(
 
 st.markdown("""<HR>""", unsafe_allow_html=True,)
 
-df = load_df_from_google_sheets(use_file_not_url)
+# df = load_df_from_google_sheets(use_file_not_url)
+
+df = read_google_sheets_id(
+    source_url,
+    1,
+    10**100,
+    0,
+    27,
+    )
+
+# st.write('\- - - checkpoint 0-0 (2025-09-28) - - -')
+# st.dataframe(df)
+# st.write('\- - - checkpoint 0-1 (2025-09-28) - - -')
 
 # select relevant columns from spreadsheet
 # for collections table and drop extra
@@ -185,23 +232,49 @@ df_dosage.dropna(
     axis=0, how='any', subset=['Name'], inplace=True
     )
 
+# st.warning('df_collections original')
+# st.dataframe(df_collections)
+# st.warning('df_dosage original')
+# st.dataframe(df_dosage)
+
 # replace Null with zeroes and add all doses from same day
 # to calculate the whole day dosage for particular tablets
 # then drop columns that were used for this calculation
 df_dosage.fillna(0, inplace=True)
+df_dosage['Morning'] = df_dosage['Morning'].apply(lambda x: int(str(x).replace(' mg','')))
+df_dosage['Afternoon'] = df_dosage['Afternoon'].apply(lambda x: int(str(x).replace(' mg','')))
+df_dosage['Evening'] = df_dosage['Evening'].apply(lambda x: int(str(x).replace(' mg','')))
+df_collections['Size (mg)'] = df_collections['Size (mg)'].apply(lambda x: int(str(x).replace(' mg','')))
+
+# st.warning('df_collections " mg" removed')
+# st.dataframe(df_collections)
+# st.warning('df_dosage " mg" removed')
+# st.dataframe(df_dosage)
+# st.write(df_dosage.index.inferred_type, df_collections.index.inferred_type)
+
 df_dosage['daily_dose_mg'] = (df_dosage['Morning'] + df_dosage['Afternoon'] + df_dosage['Evening'])
+# st.warning('df_dosage aggregated:')
+# st.dataframe(df_dosage)
+
 df_dosage.drop(columns=['Morning', 'Afternoon', 'Evening'], inplace=True)
+# st.warning('df_dosage spare columns removed:')
+# st.dataframe(df_dosage)
 
 # calculate total of particular medicine (mg)
 # collected on particular day
 # then drop columns that were used for this calculation
 df_collections['collected_today_mg'] = df_collections['Quantity'] * df_collections['Size (mg)']
 df_collections.drop(columns=['Quantity', 'Size (mg)'], inplace=True)
+# st.warning('df_collections aggregated:')
+# st.dataframe(df_collections)
 
 # standarise 'Data' to be data only 
 # without the time component
-df_dosage['Date'] = df_dosage['Date'].apply(lambda x: pd.to_datetime(x).date())
-df_collections['Date'] = df_collections['Date'].apply(lambda x: pd.to_datetime(x).date())
+df_dosage['Date'] = df_dosage['Date'].apply(lambda x: pd.to_datetime(x, format='%d/%m/%Y').date())
+df_collections['Date'] = df_collections['Date'].apply(lambda x: pd.to_datetime(x, format='%d/%m/%Y').date())
+# st.warning('without the time component (if present before):')
+# st.dataframe(df_dosage)
+# st.dataframe(df_collections)
 
 # st.warning('tables prepared:')
 # st.dataframe(df_collections)
@@ -211,16 +284,28 @@ df_collections['Date'] = df_collections['Date'].apply(lambda x: pd.to_datetime(x
 
 if extra_collection_requested:
     df_collections = pd.concat([df_collections, df_extra])
+    # st.warning('EXTRA COLLECTION REQUESTED!!! Final df_collections:')
+    # st.dataframe(df_collections)
 # st.dataframe(df_collections)
+
+
 
 # unpivot three columns
 # from wide to long data structure
 df_dosage = df_dosage.pivot(columns=['Name'], values=['daily_dose_mg'], index=['Date'])
 df_collections = df_collections.pivot(columns=['Name'], values=['collected_today_mg'], index=['Date'])
+# st.warning('pivoted:')
+# st.dataframe(df_dosage)
+# st.dataframe(df_collections)
 
 # drop an extra index level which appeared after pivoting
 df_dosage.columns = df_dosage.columns.droplevel(0)
+df_dosage.sort_index(inplace=True)
 df_collections.columns = df_collections.columns.droplevel(0)
+df_collections.sort_index(inplace=True)
+# st.warning('dropped extra index level if present:')
+# st.dataframe(df_dosage)
+# st.dataframe(df_collections)
 
 # add suffixes to columns:
 # for dosage use '_out'
@@ -229,28 +314,48 @@ columns_iterator = df_collections.columns
 for i_column in columns_iterator:
     df_collections.rename(columns={i_column: i_column + '_in'}, inplace=True)
     df_dosage.rename(columns={i_column: i_column + '_out'}, inplace=True)
+# st.warning('suffixes added "-in" and "-out":')
+# st.dataframe(df_dosage)
+# st.dataframe(df_collections)
 
-
-# merge colloections and dosage on 'Date'
+# merge collections and dosage on 'Date'
 # outer, so all rows from both tables
 # are included
 df_full = df_collections.merge(df_dosage, how='outer', on='Date')
+# st.warning('df_full merged from collections and dosage:')
+# st.dataframe(df_full)
 # st.write('dosage and collections merged')
 # st.warning(type(df_full))
 # st.write(df_full)
 
 # !!!!! set dates here - start must be first medicines collection date
 start_date = '2025-05-12'
-end_date = str(pd.to_datetime('today').date() + pd.Timedelta("60 days"))  # '2025-09-22'
+number_of_days_to_add = 5*7
+number_of_days_to_subtract = 7
+end_date = str(pd.to_datetime('today').date() + pd.Timedelta(str(number_of_days_to_add) + " days"))  # '2025-09-22'
 # st.write(f'start {type(start_date)}, end {type(end_date)}')
 # !!!!!
 
 # Create the full datetime index for required dates
 full_index = pd.date_range(start=start_date, end=end_date)   #, freq="D")
+# standarise 'full_index' to be data only 
+# without the time component
+full_index = pd.to_datetime(full_index).date
+# st.warning('full index prepared:')
+# st.dataframe(full_index)
 
 df_full = df_full.reindex(full_index)
+# st.warning('df_full reindexed:')
+# st.dataframe(df_full)
+# st.write(df_dosage.index.inferred_type, df_collections.index.inferred_type, df_full.index.inferred_type)
+
+
 df_full.sort_index(inplace=True)
-df_full.index = df_full.index.date
+# st.write('\- - - checkpoint !!!!!!-A0 (2025-09-28) - - -')
+# st.write(df_full)
+# st.write('\- - - checkpoint !!!!!!-A1 (2025-09-28) - - -')
+
+
 
 # fill Nulls in colections with zeros (no extra medicines added)
 # fill Nulls in dosage with previous dosage value - if Null
@@ -264,6 +369,12 @@ for i_column in columns_iterator_new:
         df_full[i_column].ffill(inplace=True)
     elif '_in' in i_column:
         df_full[i_column].fillna(0, inplace=True)
+        
+# st.write('\- - - checkpoint !!!!!!-B0 (2025-09-28) - - -')
+# st.write(df_full)
+# st.write('\- - - checkpoint !!!!!!-B1 (2025-09-28) - - -')
+
+
 
 # calculates difference between two running totals:
 # 'collections running total' (all collected till date)
@@ -277,12 +388,26 @@ for i_column in columns_iterator:
     df_full[i_column] = \
         df_full[i_column].apply(MustBeGreaterThanZero).fillna('')
 
-st.write(df_collections)
-st.write(df_dosage)
+# st.write('\- - - checkpoint B-0 (2025-09-28) - - -')
+# st.write(df_collections)
+# st.write('\- - - checkpoint B-1 (2025-09-28) - - -')
+
+# st.write('\- - - checkpoint C-0 (2025-09-28) - - -')
+# st.write(df_dosage)
+# st.write('\- - - checkpoint C-1 (2025-09-28) - - -')
+
 df_full.drop(columns=['Atorvastatin_in', 'Dapagliflozin_in', 'Metformin_in',
                       'Atorvastatin_out', 'Dapagliflozin_out', 'Metformin_out'],
              inplace=True)
-st.write(df_full[49:])
+# st.write('\- - - checkpoint E-0 (2025-09-28) - - -')
+# st.write(df_full[49:])
+df_full['Weekday_tmp'] = pd.to_datetime(df_full.index)
+df_full['Weekday'] = df_full['Weekday_tmp'].dt.day_name()
+df_full['Weekday'] = df_full['Weekday'].astype(str) + ' - for ' + df_full['Weekday_tmp'].shift(-1).dt.day_name().astype(str) + ' (mg):'
+df_full = df_full[['Weekday','Atorvastatin', 'Dapagliflozin', 'Metformin']]
+# df_full.drop(columns=['Weekday_tmp'],inplace=True)
+st.write(df_full[(len(df_full)-number_of_days_to_add-number_of_days_to_subtract):-1])
+# st.write('\- - - checkpoint E-1 (2025-09-28) - - -')
 
 df_full.to_csv('./medicines.csv')
 df_full.to_excel('./medicines.xlsx', sheet_name='RunningTotal',)
