@@ -37,4 +37,3 @@ typing_extensions==4.14.1
 tzdata==2025.2
 urllib3==2.5.0
 st-gsheets-connection
-streamlit_gsheets
