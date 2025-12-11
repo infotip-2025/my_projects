@@ -167,7 +167,7 @@ use_file_not_url = False  # st.checkbox('Read from local file? Uncheck if run re
 # # ! to True and provide an extra date
 # # ! e.g. tomorrows date. Additionally
 # # ! set values in the below df creator
-# extra_collection_requested = st.checkbox('Do you want to simulate an extra collection?')
+extra_collection_requested = False  # st.checkbox('Do you want to simulate an extra collection?')
 # # st.warning(extra_collection_requested)
 # extra_collection_date_time = \
 #     pd.to_datetime('today').date() + pd.Timedelta('1 days')  # time is redundand as plenty of the code below was amended
