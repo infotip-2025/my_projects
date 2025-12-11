@@ -27,20 +27,6 @@ import pokemon as pok
 
 # st.write('Jeb sie chuju!')
 
-def bmi_to_kg_list (bmi_range, height):
-    bmi_vs_kg = str(height) + ' cm:  '
-    height /= 100
-    for bmi in bmi_range:
-        for dec in range(0,10,5):
-            bmi_dec = bmi + dec/10
-            bmi_vs_kg = ''.join([bmi_vs_kg, str(bmi_dec), ' = ', f'{bmi_dec * height**2:.1f}', ' kg, '])
-    return bmi_vs_kg[:-2]  # trim the last comma and a space
-
-h1 = 182
-h2 = h1 + 1
-bmi_start = 25
-bmi_end = 27
-
 page_layout = st.sidebar.radio(
      "Page layout:", options=['centered', 'wide']
  )
@@ -145,9 +131,7 @@ if os.environ.get('HOSTNAME') != 'streamlit':
     fig_01_df['Weight'] = fig_01_df['Weight'].astype(float)
     # st.write('check weight only')
     # st.dataframe(fig_01_df)
-    
-    st.write(bmi_to_kg_list(range(bmi_start, bmi_end+1),h1))
-    st.write(bmi_to_kg_list(range(bmi_start, bmi_end+1),h2))
+
     st.warning(f'All readings for {days_since_20250512} days')    
     st.dataframe(fig_01_df[['Weight', 'BMI']])
 

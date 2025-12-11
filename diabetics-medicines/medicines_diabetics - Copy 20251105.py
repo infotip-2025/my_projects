@@ -173,7 +173,7 @@ extra_collection_date_time = \
     pd.to_datetime('today').date() + pd.Timedelta('1 days')  # time is redundand as plenty of the code below was amended
 extra_collection_date_time = \
     st.date_input(
-        f'Enter new date. (The default one is tomorrow - {extra_collection_date_time})',
+        f'Enter new date. The default one is {extra_collection_date_time}: ',
         extra_collection_date_time,
         min_value='today'
         )
@@ -330,7 +330,7 @@ df_full = df_collections.merge(df_dosage, how='outer', on='Date')
 
 # !!!!! set dates here - start must be first medicines collection date
 start_date = '2025-05-12'
-number_of_days_to_add = 10*7
+number_of_days_to_add = 5*7
 number_of_days_to_subtract = 7
 end_date = str(pd.to_datetime('today').date() + pd.Timedelta(str(number_of_days_to_add) + " days"))  # '2025-09-22'
 # st.write(f'start {type(start_date)}, end {type(end_date)}')
@@ -405,21 +405,8 @@ df_full['Weekday_tmp'] = pd.to_datetime(df_full.index)
 df_full['Weekday'] = df_full['Weekday_tmp'].dt.day_name()
 df_full['Weekday'] = df_full['Weekday'].astype(str) + ' - for ' + df_full['Weekday_tmp'].shift(-1).dt.day_name().astype(str) + ' (mg):'
 df_full = df_full[['Weekday','Atorvastatin', 'Dapagliflozin', 'Metformin']]
-
-today = (pd.to_datetime('today').date())
-a_value = df_full[df_full['Atorvastatin'] == ''].loc[today:].index[0]
-b_value = df_full[df_full['Dapagliflozin'] == ''].loc[today:].index[0]
-c_value = df_full[df_full['Metformin'] == ''].loc[today:].index[0]
-
-a, b, c = st.columns(3)
-a.metric("Atorvastatin last day:", str(a_value), str((a_value - today).days // 7) + ' week(s) and ' + str((a_value - today).days % 7) + ' day(s)', border=True)
-b.metric("Dapagliflozin last day:", str(b_value), str((b_value - today).days // 7) + ' week(s) and ' + str((b_value - today).days % 7) + ' day(s)', border=True)
-c.metric("Metformin last day:", str(c_value), str((c_value - today).days // 7) + ' week(s) and ' + str((c_value - today).days % 7) + ' day(s)', border=True)
-
+# df_full.drop(columns=['Weekday_tmp'],inplace=True)
 st.write(df_full[(len(df_full)-number_of_days_to_add-number_of_days_to_subtract):-1])
-
-
-
 # st.write('\- - - checkpoint E-1 (2025-09-28) - - -')
 
 df_full.to_csv('./medicines.csv')
