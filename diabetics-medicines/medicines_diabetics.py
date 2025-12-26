@@ -329,7 +329,7 @@ df_full = df_collections.merge(df_dosage, how='outer', on='Date')
 # !!!!! set dates here - start must be first medicines collection date
 start_date = '2025-05-12'
 number_of_days_to_add = 26*7  # extra 26 weeks after the lat row - will be trimmed before displaying df
-number_of_days_to_subtract = 14
+number_of_days_to_subtract = 1
 end_date = str(pd.to_datetime('today').date() + pd.Timedelta(str(number_of_days_to_add) + " days"))  # '2025-09-22'
 # st.write(f'start {type(start_date)}, end {type(end_date)}')
 # !!!!!
@@ -417,7 +417,7 @@ c.metric("Metformin last day:", str(c_value), str((c_value - today).days // 7) +
 st.markdown("""<HR>""", unsafe_allow_html=True,)
 
 df_to_display = df_full[(len(df_full)-number_of_days_to_add-number_of_days_to_subtract):-1]
-max_value = min(a_value, b_value, c_value)
+max_value = min(a_value,  b_value, c_value)
 st.write(df_to_display[df_to_display.index <= max_value])
 
 
