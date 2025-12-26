@@ -329,7 +329,7 @@ df_full = df_collections.merge(df_dosage, how='outer', on='Date')
 # !!!!! set dates here - start must be first medicines collection date
 start_date = '2025-05-12'
 number_of_days_to_add = 26*7  # extra 26 weeks after the lat row - will be trimmed before displaying df
-number_of_days_to_subtract = 1
+number_of_days_to_subtract = 14
 end_date = str(pd.to_datetime('today').date() + pd.Timedelta(str(number_of_days_to_add) + " days"))  # '2025-09-22'
 # st.write(f'start {type(start_date)}, end {type(end_date)}')
 # !!!!!
