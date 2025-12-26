@@ -416,7 +416,8 @@ c.metric("Metformin last day:", str(c_value), str((c_value - today).days // 7) +
 
 st.markdown("""<HR>""", unsafe_allow_html=True,)
 
-st.write(df_full[(len(df_full)-number_of_days_to_add-number_of_days_to_subtract):-1])
+df_to_display = df_full[(len(df_full)-number_of_days_to_add-number_of_days_to_subtract):-1]
+st.write(df_to_display[df_to_display.index<=a_value])
 
 
 
