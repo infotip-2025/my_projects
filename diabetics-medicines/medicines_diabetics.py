@@ -148,7 +148,8 @@ def load_df_from_google_sheets(from_file):
 # Start counter
 start_time = time.time()
 
-st.warning('Reading data from Google Sheets can tale around 30 seconds.')
+st.write('Reading data from Google Sheets can tale around 30 seconds.')
+st.warning('BEWARE! Extra non-full-week tablets mock removed in the spreadsheet!!!')
 
 st.markdown("""<HR>""", unsafe_allow_html=True,)
 
